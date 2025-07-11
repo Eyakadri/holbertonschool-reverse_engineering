@@ -3,7 +3,7 @@
 source ./messages.sh
 
 if [ "$#" -ne 1 ]; then
-  echo "Usage: $0 <ELF_file>"
+  echo "Usage: $0 <elf_file>"
   exit 1
 fi
 
@@ -21,7 +21,7 @@ fi
 
 magic_number=$(head -c16 "$file_name" | od -An -tx1 | tr -s ' ' | sed 's/^ //; s/ $//')
 class=$(readelf -h "$file_name" | awk '/Class:/ {print $2}')
-byte_order=$(readelf -h "$file_name" | awk '/Data:/ {print $2, $3}' | sed 's/,//')
+byte_order=$(readelf -h "$file_name" | grep 'Data:' | sed 's/.*,//; s/^[ \t]*//')
 entry_point_address=$(readelf -h "$file_name" | awk '/Entry point address:/ {print $4}')
 
 display_elf_header_info
